@@ -35,6 +35,34 @@
 | BR-1.5 | **Campaign Closure:** Hiring Admin or HR Manager can close a campaign. Upon closure, all associated job postings are automatically unpublished (FR-3.4). |
 | BR-1.6 | **Data Archival:** Upon campaign closure, JD and CV data are moved to "Archived" state. Archived data is retained for 12 months then permanently deleted. Archived data is read-only. |
 
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor User as Người dùng (HR/SE Manager/Admin)
+    participant Client as Web Application
+    participant Auth as Auth Service
+    participant DB as Database
+    
+    User->>Client: Nhập email/password hoặc chọn SSO
+    Client->>Auth: Yêu cầu xác thực
+    alt Sử dụng SSO
+        Auth->>SSO Provider: Chuyển hướng & Xác thực
+        SSO Provider-->>Auth: Trả về SSO Token
+    else Đăng nhập cục bộ
+        Auth->>DB: Truy vấn user & so sánh Hash (bcrypt)
+        DB-->>Auth: Dữ liệu user & Role
+    end
+    
+    alt Đăng nhập sai (>= 5 lần)
+        Auth->>DB: Khóa tài khoản tạm thời (15p)
+        Auth-->>Client: Báo lỗi "Account Locked"
+    else Đăng nhập thành công
+        Auth->>Auth: Tạo JWT Token (thời hạn 8h)
+        Auth-->>Client: Trả về User Context & Token
+        Client-->>User: Hiển thị Dashboard theo Role tương ứng (RBAC)
+    end
+```
+
 ---
 
 ## 2. JD Analysis & Generation
@@ -47,6 +75,7 @@
 | FR-2.2 | The AI Agent shall automatically analyze input requirements and draft/generate a structured, professional Job Description (JD) (including: Job Title, Job Description, Mandatory Requirements, Preferred Requirements, Benefits).                        |
 | FR-2.3 | HR shall receive the draft JD from AI and can: (a) Use the AI Agent to further rewrite/edit each section, or (b) manually edit via the editor — especially for compensation, benefits, and company culture (areas SE Managers may not be familiar with). |
 | FR-2.4 | The system shall maintain Version History for every JD edit, allowing for comparison and rollback if necessary.                                                                                                                                          |
+| FR-2.5 | **Bi-directional JD Intelligence:** The AI shall evaluate the draft JD against the market to provide: **(a) Attract Score** (predicts application rate), **(b) Requirement Gap Detection** (finds contradictions), **(c) Bias Audit** (flags exclusionary language), and **(d) Salary Benchmarking** (alerts if salary deviates >15% from real-time market data). |
 
 ### Non-functional Requirements (NFR)
 
@@ -62,6 +91,36 @@
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | BR-2.1 | Any AI-generated JD must undergo manual review by HR (HITL — Human In The Loop) before being marked as "Complete" and ready for posting. |
 | BR-2.2 | JDs in "Draft" status shall not be used for any automated posting or CV matching features within the system.                             |
+| BR-2.3 | **JD Quality Feedback Loop:** After campaigns close, the system shall assign a "JD Quality Score" based on the ratio of technical rejections; frequently rejected JDs will be flagged for mandatory review to improve criteria in future campaigns. |
+
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor SEM as SE Manager
+    actor HR as HR Recruiter
+    participant Client as Web App
+    participant AI as AI Agent Core
+    participant DB as Database
+
+    SEM->>Client: Upload file yêu cầu (Word/Docx) hoặc điền form
+    Client->>AI: Gửi dữ liệu thô yêu cầu tạo JD
+    activate AI
+    AI->>AI: Rút trích thông tin cốt lõi
+    AI->>AI: Sinh JD nháp (Title, Requirements, Benefits...)
+    AI->>AI: Phân tích 2 chiều: Attract Score, Gap, Bias, Salary Benchmarking
+    AI-->>Client: Trả về JD nháp + Báo cáo thị trường (Market Analysis)
+    deactivate AI
+    
+    Client-->>HR: Hiển thị JD nháp và các cảnh báo (nếu có)
+    HR->>Client: Chỉnh sửa thủ công hoặc yêu cầu AI sinh lại
+    Client->>AI: Gọi AI chỉnh sửa (nếu cần)
+    AI-->>Client: Trả về văn bản mới
+    
+    HR->>Client: Duyệt JD & Đánh dấu "Complete"
+    Client->>DB: Lưu JD Version & Mở Campaign "Active"
+    DB-->>Client: Thành công
+    Client-->>HR: Thông báo lưu JD thành công
+```
 
 ---
 
@@ -77,6 +136,8 @@
 | FR-3.4 | **Active Unpublish:** HR shall be able to manually take down posted JDs (e.g., when the position is filled). The status will then update to "Taken Down" on the Dashboard and the listing will be removed from the platform.                                               |
 | FR-3.5 | In case of posting failure (API error, timeout, authentication error), the system shall automatically retry up to **3 times** with exponential backoff: **30s → 60s → 120s**. After 3 failures, the system marks the status as "Error" and notifies HR with an error code. |
 | FR-3.6 | The system shall record detailed logs for each platform API call (request/response) for troubleshooting purposes.                                                                                                                                                          |
+| FR-3.7 | **Agentic Channel Intelligence:** Based on JD attributes (role, seniority, tech stack), the AI shall recommend the most suitable recruitment platforms (Channel-fit Analysis) and automatically adapt the tone of the JD to fit each specific platform.                  |
+| FR-3.8 | **Market & Performance Monitoring:** The AI shall track competitor JDs for market comparison. It shall also track posting conversion rates after 3-5 days to recommend boosting budget or switching channels.                                                            |
 
 ### Non-functional Requirements (NFR)
 
@@ -96,6 +157,44 @@
 | BR-3.3 | HR is not allowed to post the same JD to the same platform more than once within a 24-hour period (to prevent spam).                                                                                                                                                                 |
 | BR-3.4 | **Access Control:** Only System Admin has access to view or modify platform credentials. HR cannot see raw tokens.                                                                                                                                                                   |
 | BR-3.5 | **Token Expiry:** If a token expires mid-operation, the system shall abort, mark as "Auth Error", and notify System Admin. Platform will be set to "Inactive" until refreshed.                                                                                                       |
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor HR as HR Recruiter
+    participant Client as Web App
+    participant AI as AI Agent Core
+    participant Adapters as Platform Adapters
+    participant Platform as LinkedIn / TopCV / Facebook
+    participant DB as Database
+
+    HR->>Client: Chọn JD "Complete" và yêu cầu đăng
+    Client->>AI: Yêu cầu phân tích Channel-fit & Đổi văn phong
+    AI-->>Client: Gợi ý kênh phù hợp & JD content đã được adapt tone
+    Client-->>HR: Hiển thị gợi ý
+    HR->>Client: Xác nhận kênh & Bấm đăng
+    
+    loop Xử lý từng Platform
+        Client->>Adapters: Gọi API đăng bài (kèm platform token)
+        Adapters->>Platform: Tương tác API
+        alt Thành công
+            Platform-->>Adapters: Trả về Post ID
+            Adapters-->>Client: Báo thành công
+            Client->>DB: Cập nhật trạng thái "Live"
+        else Lỗi / Timeout
+            Platform-->>Adapters: Báo lỗi
+            Adapters->>Adapters: Retry 3 lần (exponential backoff)
+            Adapters-->>Client: Báo lỗi (Error Code)
+            Client->>DB: Cập nhật trạng thái "Error"
+        end
+    end
+    
+    %% AI Tracking hoạt động ngầm
+    loop Scan mỗi 24h
+        AI->>Platform: Scan đối thủ (Competitor JDs) & Tỷ lệ chuyển đổi
+        AI->>DB: Lưu insight
+        AI-->>Client: Cảnh báo HR (Đẩy ngân sách / Đổi kênh)
+    end
+```
 
 ---
 
@@ -106,10 +205,12 @@
 | ID     | Description                                                                                                                                                                                                                                                                                                         |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | FR-4.1 | HR shall upload CVs in batches (PDF/Word format). Upload limits: **Maximum 5MB per file** and **maximum 50 files per batch**. The Agent shall automatically parse information: Name, Contact, Education, Work Experience, Projects, Skills.                                                                         |
-| FR-4.2 | The Agent shall compare each CV with the target JD using Semantic Matching (LLM-based) instead of just keyword matching. Output for each CV shall include: (a) **Matching Score** and (b) **Detailed Analysis Table** — highlighting met/unmet criteria compared to the JD with a short explanation (AI Reasoning). |
+| FR-4.2 | The Agent shall evaluate CVs using **Depth Fingerprinting**, analyzing 4 dimensions to bypass simple keyword matching: **Complexity Signals, Scale Signals, Progression Signals, and Consistency Signals**. Output shall include a "Technical Fingerprint", Matching Score, and Detailed Analysis Table.            |
 | FR-4.3 | The system shall automatically categorize CVs into 3 groups based on Score: **Qualified / Needs Review / Disqualified**.                                                                                                                                                                                            |
 | FR-4.4 | HR shall review all results (Double Check — HITL) and can override categorization labels (e.g., moving a CV from "Disqualified" to "Needs Review"). Once finalized, HR clicks "Forward" to send the approved list to the Hiring Admin and SE Manager.                                                               |
 | FR-4.5 | When the same CV is evaluated against different JDs, the system shall create a separate evaluation for each CV-JD pair (scores are not shared between JDs).                                                                                                                                                         |
+| FR-4.6 | **"Why Rejected" Explainability Engine:** The AI shall explicitly classify rejection reasons into a Taxonomy (Hard Disqualifier, Soft Miss, Surface Mismatch) to prevent false negatives.                                                                                                                           |
+| FR-4.7 | **Second Chance & Blind Spot Alerts:** CVs with strong backgrounds but poor presentation (Surface Mismatch) shall be flagged as "Needs closer look". The AI shall alert SE Managers to "Blind spots" where HR might have mistakenly filtered out qualified candidates due to missing keywords.                      |
 
 ### Non-functional Requirements (NFR)
 
@@ -128,6 +229,41 @@
 | BR-4.3 | **Consistency:** When the same CV is re-scored against the same JD (unchanged content), the score variance shall not exceed ±5 points. The System Admin can configure LLM temperature = 0 for higher determinism.                                                            |
 | BR-4.4 | SE Managers cannot access the candidate list until HR completes the Double Check and clicks "Forward".                                                                                                                                                                       |
 | BR-4.5 | Scores are references to support decision-making. AI does not make the final hiring decision — that authority remains with human users (HITL).                                                                                                                               |
+| BR-4.6 | **Closed-loop System (Override Learning):** When HR overrides AI categorization and the candidate performs better/worse later, the system shall learn from this human judgement to warn HR of biases or adjust its own future predictions.                                   |
+
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor HR as HR Recruiter
+    actor SEM as SE Manager
+    participant Client as Web App
+    participant Parser as Doc Parser
+    participant AI as AI Agent Core
+    participant DB as Database
+
+    HR->>Client: Upload batch CV (max 50 file)
+    Client->>Parser: Chuyển đổi file sang dạng Text
+    Parser-->>Client: Trả về cấu trúc thô (Tên, EXP, Kỹ năng)
+    
+    Client->>AI: Yêu cầu phân tích đối chiếu với JD (Async)
+    activate AI
+    AI->>AI: Depth Fingerprinting (Complexity, Scale, Progression, Consistency)
+    AI->>AI: Xếp loại & Tạo Matching Score
+    AI->>AI: Phân loại Why Rejected (Hard Disq, Soft Miss, Surface Mismatch)
+    AI-->>Client: Trả về Score, Fingerprint, và "Blind Spot Alerts"
+    deactivate AI
+    
+    Client->>Client: Gom nhóm (Qualified / Needs Review / Disqualified)
+    Client-->>HR: Hiển thị danh sách kết quả (Double check)
+    
+    HR->>Client: HR Override kết quả (nếu AI phân loại sai)
+    Client->>DB: Lưu nhãn cuối cùng 
+    Note right of DB: Hệ thống Closed-loop học từ hành động Override của HR
+    
+    HR->>Client: Bấm "Forward"
+    Client->>DB: Mở khóa quyền xem cho SE Manager
+    Client-->>SEM: Gửi thông báo có CV mới
+```
 
 ---
 
@@ -145,6 +281,9 @@
 | FR-5.6 | **Automated Reminders:** The system shall send reminder emails to candidates and interviewers 24 hours prior to the interview.                                                                                                                                                            |
 | FR-5.7 | **Recording Interview Results:** The system shall require a final interview result (Pass/Fail/On Hold). HR or the SE Manager will input this data to close the cycle and directly update the Time-to-hire report (Module 7).                                                            |
 | FR-5.8 | **SE Manager Schedule View:** SE Managers shall have a dedicated view showing upcoming interviews assigned to them, with status (Pending/Confirmed/Cancelled), candidate name, and meeting link. "Pending" labels are visible but unconfirmed.                                       |
+| FR-5.9 | **SE Manager Interview Intelligence:** The AI shall automatically generate Personalized Interview Questions targeted at the specific candidate's weaknesses or areas needing verification based on their CV.                                                                          |
+| FR-5.10| **Candidate Comparison Matrix:** The system shall provide a multi-dimensional comparison matrix side-by-side for shortlisted candidates based on JD criteria to help SE Managers make final hiring decisions.                                                                         |
+| FR-5.11| **Post-interview AI Brief:** After an interview, the AI shall synthesize the SE Manager's raw feedback into a structured report (e.g., ASK model - Attitude, Skill, Knowledge) to save in the candidate's profile for HR use.                                                         |
 
 ### Non-functional Requirements (NFR)
 
@@ -163,6 +302,47 @@
 | BR-5.3 | **Non-response Handling:** If a candidate does not confirm within 48 hours of initial contact, the system automatically sends a follow-up email. If there is still no response after another 24 hours, the candidate is marked as "Non-responsive", and HR is notified for manual processing. |
 | BR-5.4 | **Cancellation:** When a schedule is cancelled, the system shall notify all stakeholders and update Google Calendar.                                                                                                                                                                          |
 | BR-5.5 | **Out of Scope (Coding Test / Assessments):** Technical skill tests, coding tests, or IQ/EQ assessments are handled externally by the SE Manager or third-party tools. The system does not natively generate, grade, or integrate with these assessments.                                     |
+
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor Cand as Ứng viên (Candidate)
+    actor HR as HR Recruiter
+    actor SEM as SE Manager
+    participant Client as Web App
+    participant AI as AI Agent Core
+    participant GCal as Google Calendar
+    participant Comm as Email/Zalo API
+
+    %% Quá trình Setup Phỏng vấn
+    HR->>Client: Set lịch phỏng vấn (Cand, SEM, Thời gian)
+    Client->>GCal: Check trùng lịch (Conflict Detection)
+    alt Trùng lịch
+        GCal-->>Client: Khung giờ Busy
+        Client-->>HR: Cảnh báo & Chặn đặt lịch
+    else Trống
+        GCal-->>Client: Khung giờ OK
+        Client->>Comm: Gửi thiệp mời cho ứng viên
+        Client-->>HR: Đánh dấu trạng thái "Pending"
+    end
+    
+    %% AI tự động sinh bộ câu hỏi và ma trận
+    Client->>AI: Generate Interview Intelligence
+    AI-->>Client: Trả về bộ câu hỏi cá nhân hóa & Ma trận so sánh
+    Client-->>SEM: Hiển thị lịch phỏng vấn, Candidate Info & Bộ câu hỏi
+
+    %% Xác nhận lịch
+    Cand->>Comm: Phản hồi xác nhận tham gia
+    Comm-->>Client: Webhook / Fetch email nhận xác nhận
+    Client->>GCal: Tạo Sự kiện (Event) chính thức
+    Client->>DB: Chuyển trạng thái sang "Confirmed"
+    
+    %% Cập nhật sau phỏng vấn
+    SEM->>Client: Nhập note phỏng vấn & Kết quả (Pass/Fail)
+    Client->>AI: Yêu cầu tổng hợp (Synthesis)
+    AI-->>Client: Trả về Post-interview AI Brief (Format ASK)
+    Client->>DB: Cập nhật Time-to-hire & Đóng quy trình CV
+```
 
 ---
 
@@ -215,6 +395,27 @@ This section applies **system-wide** to all modules using AI (Sections 2 & 4) an
 | BR-7.1 | **Data Access:** Only Hiring Admin and System Admin roles can access aggregate organization-wide Analytics. HR and SE Managers are restricted to their assigned campaigns only. |
 | BR-7.2 | **Time-to-hire Logic:** This metric is measured from the date a JD is marked "Complete" (FR-2) to the date an interview result "Pass" is recorded (FR-5.7).                      |
 
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor Admin as Hiring Admin
+    participant Client as Web App
+    participant Engine as Analytics Engine
+    participant DB as Database
+
+    Admin->>Client: Mở Dashboard & apply Filter (Ngày, Phòng ban)
+    Client->>Engine: Yêu cầu thống kê dữ liệu
+    Engine->>DB: Aggregation queries (Time-to-hire, Conversion Rate)
+    DB-->>Engine: Dữ liệu thô (Raw aggregated)
+    Engine->>Engine: Tính toán AI Effectiveness (Độ lệch AI vs HR thực tế)
+    Engine-->>Client: JSON thống kê đã xử lý
+    Client-->>Admin: Render Charts (Biểu đồ) & KPIs
+    
+    Admin->>Client: Click Export (Excel/PDF)
+    Client->>Engine: Yêu cầu xuất file
+    Engine-->>Client: Trả stream file
+    Client-->>Admin: Download thành công
+```
 ---
 
 ## 8. Probation Tracking & Evaluation
@@ -224,9 +425,10 @@ This section applies **system-wide** to all modules using AI (Sections 2 & 4) an
 | ID     | Description                                                                                                                                                                                                                                                                                                                                     |
 | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | FR-8.1 | SE Managers shall be able to track and input continuous performance evaluations and behaviors for candidates during their probation period directly into the system.                                                                                                                                                                            |
-| FR-8.2 | The AI Agent shall track, monitor, and analyze the SE Manager's evaluations to assess the employee's performance, organizational fit, and behavioral traits.                                                                                                                                                                                    |
-| FR-8.3 | The system shall utilize advanced analytics to evaluate employee performance in working tasks, providing managers with detailed insights to guide the performance evaluation process.                                                                                                                                                           |
+| FR-8.2 | **Probation Early Warning System:** The AI shall perform Performance Trajectory Modeling to draw progress curves rather than snapshot scoring, predicting success probabilities over time.                                                                                                                                                    |
+| FR-8.3 | **Early Warning Triggers & Intervention:** The AI shall detect risk signals (e.g., manager stops logging feedback, performance drops) and proactively recommend specific interventions (e.g., "Schedule a 1-on-1 focused on X").                                                                                                            |
 | FR-8.4 | The system shall generate and export comprehensive reports on the candidate's performance, suitability, and behaviors to help HR Managers and SE Managers continuously evaluate the candidate throughout the probation period.                                                                                                                  |
+| FR-8.5 | **Retrospective Closed-loop Learning:** Upon probation completion (pass/fail), the AI shall compare the final outcome with its initial CV screening predictions and Interview results to automatically update and optimize the scoring weights for future recruitment.                                                                        |
 
 ### Non-functional Requirements (NFR)
 
@@ -240,3 +442,39 @@ This section applies **system-wide** to all modules using AI (Sections 2 & 4) an
 | ID     | Description                                                                                                                                                                                |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | BR-8.1 | The AI Agent acts as an analytical assistant; final decisions regarding the candidate's probation status (e.g., pass, fail, or extend probation) remain the responsibility of human managers. |
+
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor SEM as SE Manager
+    participant Client as Web App
+    participant AI as AI Agent Core
+    participant DB as Database
+
+    %% Luồng đánh giá định kỳ
+    loop Theo dõi hàng tuần
+        SEM->>Client: Log đánh giá, milestone task, feedback
+        Client->>DB: Lưu lịch sử Probation
+    end
+    
+    %% AI giám sát
+    Client->>AI: Phân tích tiến độ thử việc (Async)
+    activate AI
+    AI->>AI: Performance Trajectory Modeling
+    alt Có tín hiệu cảnh báo sớm (Early Warning)
+        AI->>AI: Trigger Alert
+        AI-->>Client: Đề xuất hành động (Intervention e.g. "Cần 1-1 meeting")
+        Client-->>SEM: Cảnh báo trực tiếp / Gửi email notification
+    else Progress bình thường
+        AI-->>Client: No action needed
+    end
+    deactivate AI
+
+    %% Kết thúc Probation và AI tự học lại (Retrospective)
+    SEM->>Client: Quyết định cuối cùng (Pass/Fail Probation)
+    Client->>DB: Cập nhật Employee Status
+    
+    Client->>AI: Gửi Retrospective (Tiên đoán CV đầu vào VS Kết quả Probation)
+    AI->>AI: Cập nhật trọng số (Score weights update)
+    AI->>DB: Lưu Models / Cấu hình tính điểm mới (Closed-loop)
+```

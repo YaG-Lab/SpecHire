@@ -1,0 +1,25 @@
+flowchart TD
+    Start([Start]) --> PostJD[Post JD - JD Intelligence]
+    PostJD --> Channel[Agentic Job Posting - Channel Selection]
+    Channel --> ReceiveCV[Receive CVs]
+    ReceiveCV --> Fingerprint[CV Depth Fingerprinting]
+    Fingerprint --> Screening{Screening}
+    Screening -->|Qualified| Shortlist[Add to Shortlist]
+    Screening -->|Surface Mismatch| NeedsReview[Flag Needs closer look]
+    NeedsReview --> ManualReview[Manual review by HR/SE Manager]
+    ManualReview --> Shortlist
+    Screening -->|Rejected| Rejection[Rejected with Why Rejected Explainability]
+    Shortlist --> InterviewPrep[Interview Intelligence: Generate Qs and Comparison Matrix]
+    InterviewPrep --> Interview[Interview]
+    Interview --> Decision{Hire}
+    Decision -->|Yes| Offer[Make Offer]
+    Decision -->|No| Rejection
+    Offer --> Onboard[Onboard new hire]
+    Onboard --> Probation[Probation Tracking]
+    Probation --> EarlyWarning{Early Warning Signals}
+    EarlyWarning -->|Yes| Intervention[Recommend Intervention and Actions]
+    EarlyWarning -->|No| ProbationPass[Continue / Pass probation]
+    Intervention --> Probation
+    ProbationPass --> ClosedLoop[Closed-loop Learning: update scoring and JD quality]
+    Rejection --> ClosedLoop
+    ClosedLoop --> PostJD

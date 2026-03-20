@@ -58,3 +58,32 @@
    • Outcome-weighted Scoring: sau 6 tháng, hệ thống biết rằng "ứng viên có side project trên GitHub pass probation cao hơn 40% so với ứng viên không có", từ đó tự tăng trọng số tiêu chí này.
    • JD Quality Score: nếu một JD tạo ra nhiều ứng viên bị reject ở vòng kỹ thuật, AI kết luận JD đó có vấn đề về criteria và gắn flag để review trước lần tuyển tiếp theo.
    • HR Override Analysis: khi HR override AI categorization và kết quả sau đó tốt hơn AI prediction → hệ thống học từ judgement của con người; khi override dẫn đến kết quả tệ hơn → hệ thống cảnh báo để HR biết mình có bias nào.
+
+
+````mermiad
+flowchart TD
+    Start([Start]) --> PostJD[Post JD - JD Intelligence]
+    PostJD --> Channel[Agentic Job Posting - Channel Selection]
+    Channel --> ReceiveCV[Receive CVs]
+    ReceiveCV --> Fingerprint[CV Depth Fingerprinting]
+    Fingerprint --> Screening{Screening}
+    Screening -->|Qualified| Shortlist[Add to Shortlist]
+    Screening -->|Surface Mismatch| NeedsReview[Flag Needs closer look]
+    NeedsReview --> ManualReview[Manual review by HR/SE Manager]
+    ManualReview --> Shortlist
+    Screening -->|Rejected| Rejection[Rejected with Why Rejected Explainability]
+    Shortlist --> InterviewPrep[Interview Intelligence: Generate Qs and Comparison Matrix]
+    InterviewPrep --> Interview[Interview]
+    Interview --> Decision{Hire}
+    Decision -->|Yes| Offer[Make Offer]
+    Decision -->|No| Rejection
+    Offer --> Onboard[Onboard new hire]
+    Onboard --> Probation[Probation Tracking]
+    Probation --> EarlyWarning{Early Warning Signals}
+    EarlyWarning -->|Yes| Intervention[Recommend Intervention and Actions]
+    EarlyWarning -->|No| ProbationPass[Continue / Pass probation]
+    Intervention --> Probation
+    ProbationPass --> ClosedLoop[Closed-loop Learning: update scoring and JD quality]
+    Rejection --> ClosedLoop
+    ClosedLoop --> PostJD
+````

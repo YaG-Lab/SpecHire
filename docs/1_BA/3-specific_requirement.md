@@ -13,7 +13,7 @@
 |        | — **Hiring Admin / HR Manager (Administrator):** View analytics reports on the process: Time-to-hire, conversion rates from CV to successful interview, and evaluate AI Agent effectiveness.                                               |
 |        | — **System Admin / IT Support:** Administer system configurations, manage user accounts/permissions.                                                                                                                                       |
 | FR-1.3 | The system shall provide an Admin Panel for System Admins to: create/lock/delete accounts, assign/change Roles, and fine-tune AI parameters (prompt templates, model versions, thresholds).                                                |
-| FR-1.4 | **Password Reset Flow:** The system shall support password recovery via email. If SSO is mandatory, the password reset process will be handled entirely by the SSO provider (the system will not store or process passwords).              |
+| FR-1.4 | **Password Reset Flow:** The system shall support password recovery via email. If SSO is mandatory, the password reset process will be handled entirely by the SSO provider (the system will not store or process passwords).     @         |
 
 ### Non-functional Requirements (NFR)
 

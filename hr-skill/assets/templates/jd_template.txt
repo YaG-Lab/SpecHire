@@ -1,0 +1,60 @@
+[TÊN VỊ TRÍ] — [LEVEL] | [TÊN CÔNG TY]
+
+📍 [Địa điểm]  |  💼 [Onsite / Hybrid / Remote]  |  💰 [Mức lương hoặc "Thương lượng"]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VỀ CHÚNG TÔI
+[2-3 câu mô tả công ty — sản phẩm, quy mô, sứ mệnh. Không sáo rỗng.]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MÔ TẢ CÔNG VIỆC
+
+Bạn sẽ:
+• [Nhiệm vụ 1 — bắt đầu bằng động từ hành động]
+• [Nhiệm vụ 2]
+• [Nhiệm vụ 3]
+• [Nhiệm vụ 4]
+• [Nhiệm vụ 5]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+YÊU CẦU BẮT BUỘC (Must-have)
+
+• [Kỹ năng/tool/ngôn ngữ cụ thể — không viết chung chung]
+• [Số năm kinh nghiệm tối thiểu với X]
+• [Yêu cầu cứng 3]
+• [Yêu cầu cứng 4]
+
+YÊU CẦU LÀ LỢI THẾ (Nice-to-have)
+
+• [Kỹ năng bổ sung 1]
+• [Kỹ năng bổ sung 2]
+• [Chứng chỉ / kinh nghiệm thêm]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+QUYỀN LỢI
+
+• Lương: [range hoặc "cạnh tranh, thương lượng theo năng lực"]
+• [Quyền lợi cụ thể 2 — không ghi "môi trường năng động"]
+• [Quyền lợi 3]
+• [Quyền lợi 4]
+• [Cơ hội phát triển: training budget, chứng chỉ, thăng tiến...]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CÁCH ỨNG TUYỂN
+
+Gửi CV về: [email]
+Tiêu đề email: [FORMAT — VD: "[SENIOR BE] Họ Tên — 5 năm kinh nghiệm"]
+
+Kèm theo:
+• CV (tiếng Anh hoặc tiếng Việt)
+• [Portfolio / GitHub / demo nếu có]
+• [Câu hỏi sàng lọc nếu có — VD: "Dự án lớn nhất bạn đã làm là gì?"]
+
+Hạn nộp: [Ngày] hoặc "Tuyển cho đến khi đủ"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

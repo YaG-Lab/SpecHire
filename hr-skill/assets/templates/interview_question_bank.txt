@@ -1,0 +1,104 @@
+# Ngân hàng câu hỏi phỏng vấn — HR Skill
+# Dùng kèm với Module 03 để tạo bộ câu hỏi cá nhân hóa
+
+---
+
+## TEMPLATE: Câu hỏi chung mọi vị trí
+
+### Warm-up (5 phút)
+- Bạn có thể giới thiệu ngắn gọn về hành trình sự nghiệp của mình không?
+- Điều gì khiến bạn ứng tuyển vị trí này tại công ty chúng tôi?
+
+### Behavioral — STAR format (15 phút)
+- Kể về một dự án/task khó nhất bạn từng làm. Bạn xử lý như thế nào?
+- Mô tả một lần bạn không đồng ý với quyết định của team lead. Bạn làm gì?
+- Kể về một lần bạn phải học một công nghệ mới trong thời gian ngắn.
+- Lần gần nhất bạn nhận feedback tiêu cực, bạn phản ứng thế nào?
+
+### Culture & Motivation (10 phút)
+- Môi trường làm việc lý tưởng của bạn trông như thế nào?
+- 2-3 năm tới bạn muốn trở thành ai trong ngành?
+- Bạn có câu hỏi nào cho chúng tôi không?
+
+---
+
+## TEMPLATE: Software Engineer
+
+### Junior (0-2 năm)
+Kỹ thuật cơ bản:
+- Sự khác biệt giữa stack và queue là gì? Cho ví dụ use case thực tế.
+- Khi nào dùng SQL, khi nào dùng NoSQL?
+- Git merge vs rebase — bạn dùng cái nào và tại sao?
+
+Problem solving:
+- [Bài toán thuật toán mức dễ — VD: đảo ngược chuỗi, tìm phần tử trùng lặp]
+- Viết một REST API đơn giản để quản lý danh sách todo. Bạn sẽ thiết kế như thế nào?
+
+### Mid (2-5 năm)
+Ứng dụng thực tế:
+- Bạn xử lý N+1 query problem trong ORM như thế nào?
+- Giải thích cách bạn thiết kế authentication system cho một ứng dụng web.
+- Khi nào nên dùng cache? Bạn đã dùng Redis hay Memcached chưa?
+
+Code quality:
+- Code review — bạn tìm kiếm những gì khi review PR của người khác?
+- Làm thế nào bạn quyết định khi nào cần refactor vs khi nào cần rewrite?
+
+### Senior (5+ năm)
+System design:
+- Thiết kế một URL shortener như bit.ly. Bạn sẽ xử lý high traffic như thế nào?
+- Tradeoffs giữa monolith và microservices — khi nào chuyển đổi?
+- Làm thế nào để đảm bảo zero-downtime deployment?
+
+Leadership:
+- Kể về một lần bạn phải thuyết phục team áp dụng một technical decision.
+- Bạn onboard một junior mới vào team như thế nào?
+
+---
+
+## TEMPLATE: DevOps / Cloud Engineer
+
+### Kiến thức nền
+- CI/CD pipeline của bạn trông như thế nào? Dùng tool gì?
+- Sự khác biệt giữa Docker và VM là gì?
+- Kubernetes pod vs deployment vs service — giải thích cho người mới.
+
+### Thực chiến
+- Bạn xử lý production incident như thế nào? Walk me through quy trình.
+- Làm thế nào để monitor một ứng dụng sau khi deploy?
+- Infrastructure as Code — bạn đã dùng Terraform hay CloudFormation chưa?
+
+### Cloud (AWS cụ thể)
+- Khi nào dùng EC2 vs Lambda vs ECS?
+- VPC, subnet, security group — giải thích mối quan hệ giữa chúng.
+- Bạn thiết kế HA architecture cho một web app như thế nào?
+
+---
+
+## TEMPLATE: Product Manager
+
+### Product thinking
+- Walk me through cách bạn prioritize features khi backlog quá dài.
+- Bạn đo success của một feature mới như thế nào?
+- Kể về một lần product launch thất bại. Nguyên nhân là gì? Bạn học được gì?
+
+### Stakeholder management
+- Khi engineering nói feature này mất 3 tháng nhưng business cần 2 tuần, bạn xử lý thế nào?
+- Làm thế nào bạn thu thập user feedback và biến thành product requirement?
+
+---
+
+## CÂU HỎI CÁ NHÂN HÓA THEO CV
+
+Dùng Module 03 để tự động tạo câu hỏi dựa trên:
+- Dự án cụ thể trong CV → hỏi sâu về role, impact, challenge
+- Khoảng trống trong CV → hỏi lý do một cách không phán xét
+- Skills liệt kê nhưng thiếu context → hỏi ví dụ cụ thể
+- Thành tích lớn → hỏi contribution thực sự của họ là gì
+
+Ví dụ:
+  CV ghi "Led team of 5" → hỏi: "Bạn phân công task cho team như thế nào?
+  Khi có conflict trong team, bạn xử lý ra sao?"
+
+  CV ghi "Improved performance by 40%" → hỏi: "40% đó đo bằng metric gì?
+  Baseline là bao nhiêu? Bạn làm gì cụ thể để đạt con số đó?"

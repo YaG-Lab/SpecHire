@@ -4,7 +4,7 @@
 
 ---
 
-## Bước 1 — Thu thập đầu vào
+## Bước 1 — Thu thập & Validate đầu vào
 
 **Bắt buộc phải có trước khi đánh giá:**
 
@@ -19,6 +19,24 @@
 - Link (TopCV, LinkedIn, v.v.) → yêu cầu người dùng copy-paste nội dung, vì không thể truy cập link trực tiếp
 
 Nếu thiếu JD hoặc CV, hỏi người dùng trước khi tiếp tục.
+
+### Validate chất lượng JD trước khi chấm CV
+
+Kiểm tra JD có đủ 4 yếu tố tối thiểu:
+
+1. Tên vị trí & level rõ ràng
+2. Ít nhất 3 yêu cầu kỹ thuật cụ thể
+3. Mô tả công việc thực tế (không chỉ giới thiệu công ty)
+4. Có thể suy ra được tiêu chí đánh giá ứng viên
+
+**Nếu JD thiếu 2 yếu tố trở lên → hiển thị cảnh báo trước khi tiếp tục:**
+
+⚠️ JD CHƯA ĐỦ TIÊU CHÍ — Phát hiện: [liệt kê cụ thể]
+Rủi ro: Điểm đánh giá CV sẽ mang tính chủ quan cao.
+Gợi ý: Dùng Module 01 để viết lại JD trước sẽ cho kết quả tốt hơn.
+Bạn muốn: (A) Viết lại JD trước, hay (B) Vẫn tiếp tục đánh giá?
+
+**Nếu JD đủ tiêu chí:** ghi chú ngắn "JD đủ tiêu chí ✓" rồi tiếp tục.
 
 ---
 

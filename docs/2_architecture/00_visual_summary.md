@@ -1,4 +1,5 @@
 # Architecture Visual Summary
+
 ## One-Page Architecture Overview
 
 ---
@@ -7,83 +8,88 @@
 
 ```mermaid
 graph TB
-    subgraph "Users"
+    subgraph Users ["User Roles"]
         U1[HR Recruiter]
         U2[SE Manager]
         U3[HR Admin]
     end
-    
-    subgraph "Presentation Layer"
-        UI[Web Application<br/>React/Vue]
+
+    subgraph Presentation_Layer ["Presentation Layer"]
+        UI[Web Application<br/>React / Vue]
     end
-    
-    subgraph "API Layer"
+
+    subgraph API_Layer ["API Layer"]
         API[API Gateway<br/>FastAPI<br/>Auth + Routing]
     end
-    
-    subgraph "Orchestration Layer"
-        ORCH[HR Agent Orchestrator<br/>Intent Classification<br/>Context Management<br/>SKILL Routing]
+
+    subgraph Orchestration_Layer ["Orchestration Layer"]
+        ORCH[HR Agent Orchestrator<br/>Intent Classification<br/>Context Management<br/>Skill Routing]
     end
-    
-    subgraph "SKILL Layer - Core Intelligence"
-        JD[JD Analysis SKILL<br/>━━━━━━━━━━━━━━━━<br/>📄 Parse Requirements<br/>✏️ Generate JD<br/>📊 Attract Score<br/>🔍 Gap Detection<br/>⚖️ Bias Audit<br/>💰 Salary Benchmark]
-        
-        CV[CV Semantic Analysis SKILL<br/>━━━━━━━━━━━━━━━━<br/>📑 Batch Processing<br/>🔬 Depth Fingerprinting<br/>├─ Complexity Signals<br/>├─ Scale Signals<br/>├─ Progression Signals<br/>└─ Consistency Signals<br/>🎯 Semantic Matching<br/>💡 Explainable Scoring<br/>🚨 Blind Spot Detection]
+
+    subgraph Skill_Layer ["SKILL Layer - Core Intelligence"]
+        JD[JD Analysis SKILL<br/>- Parse Requirements<br/>- Generate JD<br/>- Attract Score<br/>- Gap Detection<br/>- Bias Audit<br/>- Salary Benchmark]
+
+        CV[CV Semantic Analysis SKILL<br/>- Batch Processing<br/>- Depth Fingerprinting<br/>- Semantic Matching<br/>- Explainable Scoring<br/>- Blind Spot Detection]
     end
-    
-    subgraph "Integration Layer"
-        LLM[LLM Gateway<br/>OpenAI | Anthropic]
-        EXT[External APIs<br/>Job Boards | Salary | Calendar]
+
+    subgraph Integration_Layer ["Integration Layer"]
+        LLM[LLM Gateway<br/>OpenAI and Anthropic]
+        EXT[External APIs<br/>Job Boards / Salary / Calendar]
     end
-    
-    subgraph "Data Layer"
-        DB[(PostgreSQL<br/>+ pgvector)]
-        CACHE[(Redis<br/>Cache)]
-        QUEUE[RabbitMQ<br/>Queue]
-        S3[S3<br/>Storage]
-        VECTOR[(Pinecone<br/>Vector DB)]
+
+    subgraph Data_Layer ["Data Layer"]
+        DB[(PostgreSQL + pgvector)]
+        CACHE[(Redis Cache)]
+        QUEUE[RabbitMQ Queue]
+        S3[S3 Storage]
+        VECTOR[(Pinecone Vector DB)]
     end
-    
+
+    %% Flow Connections
     U1 --> UI
     U2 --> UI
     U3 --> UI
+
     UI --> API
     API --> ORCH
-    
+
     ORCH --> JD
     ORCH --> CV
-    
+
     JD --> LLM
     CV --> LLM
     JD --> EXT
-    
+
     JD --> DB
     CV --> DB
+
     JD --> CACHE
     CV --> CACHE
+
     CV --> QUEUE
     CV --> S3
     CV --> VECTOR
-    
-    style JD fill:#4CAF50,stroke:#2E7D32,stroke-width:3px
-    style CV fill:#2196F3,stroke:#1565C0,stroke-width:3px
-    style ORCH fill:#FF9800,stroke:#E65100,stroke-width:2px
-    style LLM fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px
+
+    %% Styling
+    style JD fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style CV fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+    style ORCH fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#000
+    style LLM fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
 ```
 
 ---
 
 ## SKILL Capability Matrix
 
-| Capability | JD Analysis SKILL | CV Analysis SKILL |
-|-----------|-------------------|-------------------|
-| **Primary Function** | Generate job descriptions | Score and match candidates |
-| **Input** | Requirements doc/form | Batch of CVs (PDF/Word) |
-| **Processing** | LLM generation + Intelligence | Depth fingerprinting + Matching |
-| **Output** | JD draft + Market analysis | Scored CVs + Explanations |
-| **Latency** | < 10s (P95) | < 5min for 50 CVs |
-| **Key Innovation** | Bi-directional intelligence | Beyond keyword matching |
-| **Learning** | Quality feedback from campaigns | HR overrides + hire outcomes |
+| Capability           | JD Analysis SKILL               | CV Analysis SKILL               |
+| -------------------- | ------------------------------- | ------------------------------- |
+| **Primary Function** | Generate job descriptions       | Score and match candidates      |
+| **Input**            | Requirements doc/form           | Batch of CVs (PDF/Word)         |
+| **Processing**       | LLM generation + Intelligence   | Depth fingerprinting + Matching |
+| **Output**           | JD draft + Market analysis      | Scored CVs + Explanations       |
+| **Latency**          | < 10s (P95)                     | < 5min for 50 CVs               |
+| **Key Innovation**   | Bi-directional intelligence     | Beyond keyword matching         |
+| **Learning**         | Quality feedback from campaigns | HR overrides + hire outcomes    |
 
 ---
 
@@ -91,7 +97,7 @@ graph TB
 
 ```mermaid
 mindmap
-  root((SpecHire<br/>Tech Stack))
+  root((SpecHire Tech Stack))
     Backend
       Python 3.11+
       FastAPI
@@ -110,7 +116,7 @@ mindmap
     Infrastructure
       Kubernetes
       Docker
-      AWS/GCP
+      AWS or GCP
       Prometheus
       Grafana
     Security
@@ -130,7 +136,7 @@ sequenceDiagram
     participant SE as SE Manager
     participant HR as HR
     participant JD as JD SKILL
-    
+
     SE->>JD: Upload Requirements
     activate JD
     JD->>JD: Parse & Extract
@@ -153,7 +159,7 @@ sequenceDiagram
     participant CV as CV SKILL
     participant Queue as Queue
     participant Worker as Workers
-    
+
     HR->>CV: Upload 50 CVs
     CV->>Queue: Distribute Tasks
     Queue->>Worker: Process Each CV
@@ -175,7 +181,7 @@ sequenceDiagram
 graph LR
     subgraph "Production Environment"
         LB[Load Balancer]
-        
+
         subgraph "Kubernetes Cluster"
             API[API Gateway<br/>×3]
             AGENT[HR Agent<br/>×3]
@@ -183,24 +189,24 @@ graph LR
             CV[CV SKILL<br/>×5]
             WORK[Workers<br/>×10]
         end
-        
+
         DB[(RDS<br/>PostgreSQL)]
         REDIS[(ElastiCache<br/>Redis)]
         S3[S3<br/>Storage]
     end
-    
+
     LB --> API
     API --> AGENT
     AGENT --> JD
     AGENT --> CV
     CV --> WORK
-    
+
     JD -.-> DB
     CV -.-> DB
     JD -.-> REDIS
     CV -.-> REDIS
     CV -.-> S3
-    
+
     style LB fill:#F44336
     style API fill:#2196F3
     style JD fill:#4CAF50
@@ -222,7 +228,7 @@ graph TB
     G --> H[RBAC Authorization]
     H --> I[Application Services]
     I --> J[Encrypted Database]
-    
+
     style B fill:#F44336
     style G fill:#FF9800
     style J fill:#4CAF50
@@ -233,6 +239,7 @@ graph TB
 ## Key Metrics Dashboard
 
 ### JD Analysis SKILL
+
 ```
 ┌─────────────────────────────────────────┐
 │ JD Generation Latency (P95)            │
@@ -249,6 +256,7 @@ graph TB
 ```
 
 ### CV Analysis SKILL
+
 ```
 ┌─────────────────────────────────────────┐
 │ Batch Processing (50 CVs)              │
@@ -270,6 +278,7 @@ graph TB
 ## Scaling Strategy
 
 ### Horizontal Scaling
+
 ```
 Normal Load         Peak Load (3x)
 ┌─────────┐        ┌─────────┐
@@ -291,25 +300,10 @@ Normal Load         Peak Load (3x)
 ```mermaid
 timeline
     title SpecHire Evolution
-    
-    Phase 1 (Q2 2026) : Foundation
-                      : API Gateway
-                      : Basic SKILLs
-    
-    Phase 2 (Q3 2026) : Core Features
-                      : JD SKILL v1.0
-                      : CV SKILL v1.0
-                      : Web UI
-    
-    Phase 3 (Q4 2026) : Enhancement
-                      : Interview SKILL
-                      : Advanced Analytics
-                      : Mobile App
-    
-    Phase 4 (Q1 2027) : AI Evolution
-                      : Multi-modal CV
-                      : Predictive Analytics
-                      : Candidate Sourcing
+    2026 Q2 : Foundation : API Gateway : Basic SKILLs
+    2026 Q3 : Core Features : JD SKILL v1.0 : CV SKILL v1.0 : Web UI
+    2026 Q4 : Enhancement : Interview SKILL : Advanced Analytics : Mobile App
+    2027 Q1 : AI Evolution : Multi-modal CV : Predictive Analytics : Candidate Sourcing
 ```
 
 ---
@@ -317,6 +311,7 @@ timeline
 ## Quick Reference
 
 ### API Endpoints
+
 ```
 POST   /api/jd/analyze          - Create JD
 GET    /api/jd/{id}             - Get JD
@@ -326,6 +321,7 @@ POST   /api/cv/override         - Record HR override
 ```
 
 ### Key Configuration
+
 ```yaml
 # JD SKILL
 latency_target: 10s
@@ -342,6 +338,7 @@ score_threshold:
 ```
 
 ### Environment Variables
+
 ```bash
 SKILL_VERSION=1.0.0
 LLM_API_KEY=sk-...
@@ -354,12 +351,12 @@ RABBITMQ_URL=amqp://...
 
 ## Contact & Support
 
-| Purpose | Contact |
-|---------|---------|
+| Purpose                    | Contact              |
+| -------------------------- | -------------------- |
 | **Architecture Questions** | #architecture-review |
-| **Implementation Support** | #platform-support |
-| **Bug Reports** | #bug-reports |
-| **Feature Requests** | #feature-requests |
+| **Implementation Support** | #platform-support    |
+| **Bug Reports**            | #bug-reports         |
+| **Feature Requests**       | #feature-requests    |
 
 ---
 

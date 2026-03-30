@@ -1,0 +1,95 @@
+# CHECKLIST ONBOARDING — [Tên nhân viên] | [Vị trí]
+# Ngày bắt đầu: ___________  |  Buddy: ___________  |  Manager: ___________
+
+Ký hiệu: [ ] Chưa làm  [x] Hoàn thành  [-] Không áp dụng
+
+---
+
+## PRE-BOARDING (Trước ngày đầu tiên) — HR phụ trách
+
+[ ] Gửi welcome email với thông tin ngày đầu tiên
+[ ] Setup tài khoản email công ty
+[ ] Thêm vào Slack / Teams / công cụ nội bộ
+[ ] Tạo tài khoản GitHub / GitLab (nếu cần)
+[ ] Setup Jira / Linear / Notion workspace
+[ ] Chuẩn bị thiết bị: laptop, màn hình, phụ kiện
+[ ] Assign buddy (đồng nghiệp cùng team hỗ trợ tuần đầu)
+[ ] Gửi tài liệu đọc trước: culture handbook, tech stack overview
+[ ] Thêm vào calendar recurring meetings (standup, all-hands...)
+[ ] Thông báo cho team biết nhân viên mới
+
+---
+
+## TUẦN 1 — Orientation
+
+### Ngày 1 — HR + Manager
+[ ] Đón tiếp, tour văn phòng (hoặc hướng dẫn remote setup)
+[ ] Ký hợp đồng và hoàn thiện thủ tục hành chính
+[ ] 1:1 với manager: kỳ vọng 30-60-90 ngày, cách làm việc
+[ ] Giới thiệu với toàn team
+[ ] Setup môi trường dev hoàn chỉnh (hướng dẫn qua README)
+[ ] Làm quen với codebase chính (guided tour)
+
+### Ngày 2-5 — Buddy phụ trách
+[ ] Giới thiệu các phòng ban liên quan (Design, QA, Data...)
+[ ] Walk-through quy trình làm việc: Git flow, PR process, code review
+[ ] Giải thích cấu trúc dự án và architecture tổng quan
+[ ] Ngồi cùng xem 1 sprint planning và 1 daily standup
+[ ] Pair programming session đầu tiên
+[ ] Q&A cuối tuần: ghi lại câu hỏi và trả lời
+
+---
+
+## TUẦN 2-4 — Ramp-up
+
+### Kỹ thuật — Nhân viên tự làm với buddy hỗ trợ
+[ ] Nhận task đầu tiên (small, safe-to-fail — không critical path)
+[ ] Submit PR đầu tiên và nhận code review
+[ ] Tham gia sprint planning với đầy đủ vai trò
+[ ] Hiểu rõ quy trình deploy: staging → production
+[ ] Làm quen với monitoring & alerting tools
+[ ] Hoàn thành task đầu tiên end-to-end
+
+### Check-in — Manager
+[ ] 1:1 cuối tuần 2: cảm nhận, blockers, điều chỉnh kỳ vọng
+[ ] 1:1 cuối tuần 4: đánh giá tiến độ, feedback hai chiều
+
+---
+
+## THÁNG 2-3 — Full Productivity
+
+### Mục tiêu
+[ ] Nhận task độc lập không cần hỏi từng bước
+[ ] Chủ động trong sprint planning (đề xuất ý kiến kỹ thuật)
+[ ] Đặt OKR cá nhân cho quý đầu tiên
+[ ] Hoàn thành 30-60-90 day review chính thức
+
+### Review 30 ngày — Manager + Nhân viên
+[ ] Đánh giá technical ramp-up
+[ ] Feedback về team dynamics
+[ ] Điều chỉnh kỳ vọng nếu cần
+
+### Review 60 ngày
+[ ] Đánh giá delivery và chất lượng công việc
+[ ] Xác nhận nhân viên đã ổn định, không cần hỗ trợ liên tục
+
+### Review 90 ngày
+[ ] Đánh giá toàn diện: technical, teamwork, culture fit
+[ ] Đặt OKR cho quý tiếp theo
+[ ] Xác nhận pass probation (nếu có)
+
+---
+
+## GHI CHÚ ONBOARDING
+
+Ngày hoàn thành các mốc quan trọng:
+- Setup môi trường: ___________
+- PR đầu tiên merged: ___________
+- Task đầu tiên hoàn thành: ___________
+- 30-day review: ___________
+- 90-day review: ___________
+
+Vấn đề phát sinh: ___________________________________________
+
+---
+Template — HR Skill | Cập nhật theo từng nhân viên

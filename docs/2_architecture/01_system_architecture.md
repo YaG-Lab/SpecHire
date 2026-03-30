@@ -38,9 +38,9 @@
 mindmap
   root((Quality Attributes))
     Performance
-      JD Generation < 10s
-      CV Batch < 5min
-      API Response < 2s
+      JD Generation under 10s
+      CV Batch under 5min
+      API Response under 2s
     Reliability
       99.5% Uptime
       Zero Data Loss
@@ -450,86 +450,86 @@ erDiagram
     JOB_DESCRIPTIONS ||--o{ CV_ANALYSIS_RESULTS : evaluated_against
     
     USERS {
-        uuid id PK
-        string email
-        string role
-        timestamp created_at
+        id uuid PK
+        email string
+        role string
+        created_at timestamp
     }
     
     CAMPAIGNS {
-        uuid id PK
-        uuid created_by FK
-        string name
-        string status
-        timestamp start_date
-        timestamp end_date
+        id uuid PK
+        created_by uuid FK
+        name string
+        status string
+        start_date timestamp
+        end_date timestamp
     }
     
     JOB_DESCRIPTIONS {
-        uuid id PK
-        uuid campaign_id FK
-        string job_title
-        text job_description
-        jsonb mandatory_requirements
-        jsonb preferred_requirements
-        jsonb benefits
-        string status
-        int version_number
-        timestamp created_at
+        id uuid PK
+        campaign_id uuid FK
+        job_title string
+        job_description text
+        mandatory_requirements jsonb
+        preferred_requirements jsonb
+        benefits jsonb
+        status string
+        version_number int
+        created_at timestamp
     }
     
     JD_VERSIONS {
-        uuid id PK
-        uuid jd_id FK
-        int version_number
-        jsonb content
-        uuid edited_by FK
-        timestamp created_at
+        id uuid PK
+        jd_id uuid FK
+        version_number int
+        content jsonb
+        edited_by uuid FK
+        created_at timestamp
     }
     
     JD_MARKET_ANALYSIS {
-        uuid id PK
-        uuid jd_id FK
-        float attract_score
-        jsonb attract_factors
-        jsonb requirement_gaps
-        jsonb bias_alerts
-        jsonb salary_benchmark
-        timestamp analyzed_at
+        id uuid PK
+        jd_id uuid FK
+        attract_score float
+        attract_factors jsonb
+        requirement_gaps jsonb
+        bias_alerts jsonb
+        salary_benchmark jsonb
+        analyzed_at timestamp
     }
     
     CANDIDATES {
-        uuid id PK
-        uuid campaign_id FK
-        string name
-        string email
-        string phone
-        string cv_file_path
-        timestamp uploaded_at
+        id uuid PK
+        campaign_id uuid FK
+        name string
+        email string
+        phone string
+        cv_file_path string
+        uploaded_at timestamp
     }
     
     CV_ANALYSIS_RESULTS {
-        uuid id PK
-        uuid candidate_id FK
-        uuid jd_id FK
-        jsonb parsed_cv
-        jsonb technical_fingerprint
-        float matching_score
-        jsonb score_breakdown
-        string category
-        jsonb explainability
-        boolean blind_spot_alert
-        timestamp analyzed_at
+        id uuid PK
+        candidate_id uuid FK
+        jd_id uuid FK
+        parsed_cv jsonb
+        technical_fingerprint jsonb
+        matching_score float
+        score_breakdown jsonb
+        category string
+        explainability jsonb
+        blind_spot_alert boolean
+        analyzed_at timestamp
     }
     
     INTERVIEWS {
-        uuid id PK
-        uuid candidate_id FK
-        uuid interviewer_id FK
-        timestamp scheduled_at
-        string status
-        string meeting_link
-        jsonb feedback
+        id uuid PK
+        candidate_id uuid FK
+        interviewer_id uuid FK
+        scheduled_at timestamp
+        status string
+        meeting_link string
+        feedback jsonb
     }
 ```
 
